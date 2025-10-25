@@ -154,13 +154,8 @@ If you use or reference this methodology, please cite our publication:
 **Preprint**: [Link to be added]  
 **DOI**: [To be added]
 
-## Contact
-
-For questions regarding the methodology:
-- Open an issue in this repository
-- Contact: [corresponding author email]
-
 ## Acknowledgments
 
 This research was conducted using data from the Pan-Cancer Analysis of Whole Genomes (PCAWG) and The Cancer Genome Atlas (TCGA) projects.
+
 
