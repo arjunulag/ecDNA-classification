@@ -45,14 +45,7 @@ The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number alter
 
 - **Data Integration**: Merges WGS and WES datasets from PCAWG and TCGA
 - **Feature Engineering**: Converts mutation counts to proportions and standardizes features
-- **Multiple ML Models**: 
-  - Logistic Regression
-  - Random Forest
-  - Gradient Boosting
-  - Decision Tree
-  - Naive Bayes
-  - XGBoost
-  - Neural Network (TensorFlow/Keras)
+- **Primary ML Model**: XGBoost
 - **Hyperparameter Optimization**: Grid search with cross-validation for XGBoost
 - **Comprehensive Evaluation**: ROC curves, confusion matrices, classification reports
 
@@ -143,6 +136,7 @@ If you use or reference this methodology, please cite our publication:
 ## Acknowledgments
 
 This research was conducted using data from the Pan-Cancer Analysis of Whole Genomes (PCAWG) and The Cancer Genome Atlas (TCGA) projects.
+
 
 
 
