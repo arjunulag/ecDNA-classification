@@ -2,7 +2,7 @@
 
 **Supplementary Code Repository for Research Publication**
 
-This repository contains the complete computational methods and analysis pipeline used in our research on predicting extrachromosomal DNA (ecDNA) presence in cancer samples. This code documentation serves to ensure transparency and reproducibility of our published findings.
+This repository contains the complete analysis pipeline for predicting extrachromosomal DNA (ecDNA) presence from WES data. 
 
 ## Purpose
 
@@ -10,14 +10,13 @@ This repository provides:
 - **Complete methods documentation** for our research paper
 - **Transparency** in our computational approaches
 - **Reproducibility** of our analytical pipeline
-- **Reference implementation** of the algorithms described in our manuscript
 
-The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number variation data to classify cancer samples based on ecDNA presence, processing data from PCAWG (Pan-Cancer Analysis of Whole Genomes) and TCGA (The Cancer Genome Atlas) datasets.
+The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number alteration data to identify ecDNA+ samples, using data from PCAWG (Pan-Cancer Analysis of Whole Genomes) and TCGA (The Cancer Genome Atlas) datasets.
 
 ---
 
 > **📄 Note for Reviewers and Readers:**  
-> This repository serves as the **supplementary computational methods** for our research publication. The code documents the exact procedures used in our analysis. While the code can be examined for methodology review, actual execution requires controlled-access genomic data (PCAWG/TCGA).
+> This repository serves as the **supplementary computational methods** for our research publication. The code documents the exact procedures used in our analysis.
 > 
 > See **SUPPLEMENTARY_METHODS.md** for detailed methodology documentation corresponding to our manuscript.
 
@@ -46,7 +45,14 @@ The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number varia
 
 - **Data Integration**: Merges WGS and WES datasets from PCAWG and TCGA
 - **Feature Engineering**: Converts mutation counts to proportions and standardizes features
-- **ML Model**: XGBoost
+- **Multiple ML Models**: 
+  - Logistic Regression
+  - Random Forest
+  - Gradient Boosting
+  - Decision Tree
+  - Naive Bayes
+  - XGBoost
+  - Neural Network (TensorFlow/Keras)
 - **Hyperparameter Optimization**: Grid search with cross-validation for XGBoost
 - **Comprehensive Evaluation**: ROC curves, confusion matrices, classification reports
 
@@ -70,15 +76,6 @@ This repository documents the exact computational methods used in our study. The
 3. **Feature Engineering** (`src/feature_engineering.py`) - Signature normalization and transformation
 4. **Model Training** (`src/model_training.py`) - Machine learning model implementation and evaluation
 
-## Reproducing Our Analysis
-
-**Note**: This code requires access to controlled-access genomic datasets (PCAWG, TCGA). 
-
-For researchers with appropriate data access:
-
-1. Obtain data access through dbGaP/ICGC DACO
-2. Update file paths in `config.py`
-3. See `DOCUMENTATION.md` for detailed methods
 
 The complete analytical pipeline as described in our manuscript can be examined in `main.py`.
 
@@ -126,10 +123,7 @@ Analysis was performed using:
 - Standard machine learning libraries (scikit-learn, XGBoost, TensorFlow)
 
 ## Data Availability
-
-The genomic data used in this study are available through:
-- **PCAWG**: https://dcc.icgc.org/pcawg (requires ICGC DACO approval)
-- **TCGA**: https://www.cancer.gov/tcga (requires dbGaP authorization)
+All data is publicly available and be obtained from https://ampliconrepository.org/, https://portal.gdc.cancer.gov/, and https://docs.icgc-argo.org/docs/data-access/icgc-25k-data.
 
 ## License
 
