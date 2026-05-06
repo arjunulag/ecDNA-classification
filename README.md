@@ -11,7 +11,7 @@ This repository provides:
 - **Transparency** in our computational approaches
 - **Reproducibility** of our analytical pipeline
 
-The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number alteration data to identify ecDNA+ samples, using data from PCAWG (Pan-Cancer Analysis of Whole Genomes) and TCGA (The Cancer Genome Atlas) datasets.
+The pipeline uses a 227-feature matrix consisting of single-base substitution (SBS96), insertion/deletion (ID83), and copy-number (CN48) features to identify ecDNA-positive samples, using data from the Pan-Cancer Analysis of Whole Genomes (PCAWG) and The Cancer Genome Atlas (TCGA) datasets.
 
 ---
 
@@ -19,6 +19,20 @@ The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number alter
 > This repository serves as the **supplementary computational methods** for our research publication. The code documents the exact procedures used in our analysis.
 > 
 > See **SUPPLEMENTARY_METHODS.md** for detailed methodology documentation corresponding to our manuscript.
+
+---
+
+## Feature Matrix
+
+The model uses a 227-feature matrix composed of three mutation-derived feature classes:
+
+- SBS96 single-base substitution contexts
+- ID83 insertion/deletion contexts
+- CN48 copy-number contexts
+
+Raw count matrices were converted to proportions within each mutation class and then combined into a unified feature matrix for model training and evaluation.
+
+**Copy number feature construction:** Copy number features were derived from WGS-based allele-specific copy number profiles generated using Allele-Specific Copy Number Analysis of Tumors (ASCAT) as part of the PCAWG consensus calls. These copy number profiles were intersected with exonic regions defined by Genome Annotation for the Encyclopedia of DNA Elements (GENCODE), and the resulting exonic-restricted segments were categorized using SigProfilerMatrixGenerator's CN48 schema. The same exonic restriction was applied to SBS96 and ID83 mutation features, ensuring that all feature matrices were derived from WES-accessible genomic regions. ASCAT internally accounts for tumor purity and ploidy estimation. This design tests whether ecDNA-discriminating signal is present within genomic regions accessible to WES, independent of additional noise introduced by native WES-based copy number calling.
 
 ---
 
@@ -39,20 +53,27 @@ The pipeline uses mutational signatures (SBS, DBS, Indels) and copy number alter
 │   └── utils.py              # Utility functions
 └── notebooks/
     └── ecDNA_analysis.ipynb  # Optional: Jupyter notebook version
+
 ```
 
 ## Features
 
-- **Data Integration**: Merges WGS and WES datasets from PCAWG and TCGA
-- **Feature Engineering**: Converts mutation counts to proportions and standardizes features
+- **Data Integration**: Loads and aligns WGS-derived and WES-accessible feature data from PCAWG and TCGA sources
+- **Feature Engineering**: Constructs a 227-feature matrix from SBS96, ID83, and CN48 mutation-derived features
+- **WES-Accessible Feature Design**: Restricts features to genomic signals observable within WES-accessible regions
 - **Primary ML Model**: XGBoost
-- **Hyperparameter Optimization**: Grid search with cross-validation for XGBoost
-- **Comprehensive Evaluation**: ROC curves, confusion matrices, classification reports
+- **Comparator Model**: Feed-forward neural network / multilayer perceptron (MLP)
+- **Hyperparameter Optimization**: 3x3 grid search with 10-fold cross-validation for XGBoost
+- **Model Evaluation**: Classification accuracy, confusion matrix, and ROC curve
 
+```
+  
 ## Requirements
 
 - Python 3.7+
 - See `requirements.txt` for package dependencies
+
+```
 
 ## Related Publication
 
@@ -73,8 +94,7 @@ This repository documents the exact computational methods used in our study. The
 The complete analytical pipeline as described in our manuscript can be examined in `main.py`.
 
 ## Data Requirements
-
-The pipeline expects the following data files:
+Input data files are not included in this repository and must be obtained from the appropriate TCGA, PCAWG, and AmpliconRepository data sources. After access and preprocessing, the following processed input files should be placed in the expected input directories:
 
 ### PCAWG WGS Data
 - `PanPCAWG_CNV48.matrix.transposed.tsv`
@@ -97,10 +117,13 @@ The pipeline expects the following data files:
 
 Our analysis pipeline includes:
 
-- **7 Machine Learning Models**: Logistic Regression, Random Forest, Gradient Boosting, Decision Tree, K-Nearest Neighbors, Naive Bayes, XGBoost
-- **Deep Learning**: Neural Network with TensorFlow/Keras
-- **Hyperparameter Optimization**: 10-fold stratified cross-validation with grid search
-- **Performance Evaluation**: ROC-AUC, confusion matrices, precision, recall, F1-score
+- **Feature Matrix Construction**: SBS96, ID83, and CN48 features combined into a 227-feature matrix
+- **Candidate Model Evaluation**: Multiple machine learning classifiers were evaluated during model development, including logistic regression, random forest, gradient boosting, decision tree, k-nearest neighbors, naive Bayes, XGBoost, and neural network models.
+- **Primary Reported Model**: XGBoost, which showed the strongest overall performance
+- **Comparator Model**: Feed-forward neural network / multilayer perceptron (MLP)
+- **Hyperparameter Optimization**: 3x3 grid search with 10-fold cross-validation for XGBoost
+- **Model Training and Evaluation**: 5-fold cross-validation, followed by evaluation on the held-out WES test set
+- **Performance Evaluation**: Classification Accuracy, confusion matrices, and ROC curves
 
 Complete methodology details are available in our manuscript and `DOCUMENTATION.md`.
 
@@ -116,7 +139,16 @@ Analysis was performed using:
 - Standard machine learning libraries (scikit-learn, XGBoost, TensorFlow)
 
 ## Data Availability
-All data is publicly available and be obtained from https://ampliconrepository.org/, https://portal.gdc.cancer.gov/, and https://docs.icgc-argo.org/docs/data-access/icgc-25k-data.
+
+This repository does not redistribute raw genomic data. The analysis used data resources from The Cancer Genome Atlas (TCGA), the Pan-Cancer Analysis of Whole Genomes (PCAWG) project, and AmpliconRepository.
+
+Users should obtain any required data directly from the appropriate data access portals:
+
+- TCGA / GDC Data Portal: https://portal.gdc.cancer.gov/
+- PCAWG / ICGC data access: https://docs.icgc-argo.org/docs/data-access/icgc-25k-data
+- AmpliconRepository: https://ampliconrepository.org/
+
+Processed input files should be placed in the expected input directories before running the pipeline.
 
 ## License
 
